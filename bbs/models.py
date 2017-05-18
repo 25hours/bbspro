@@ -13,6 +13,7 @@ class Article(models.Model):
     pub_date = models.DateTimeField(blank=True,null=True)
     last_modify = models.DateTimeField(auto_now=True)
     priority = models.IntegerField(u"优先级", default=1000)
+    head_img = models.ImageField(u"文章标题图片", upload_to="uploads")    ##默认文件上传到项目根目录，此处使用upload_to指定路径，此路径自动创建
     status_choices = (('draft',u"草稿"),
                       ('published',u"已发布"),
                       ('hidden',u"隐藏"),
@@ -41,11 +42,11 @@ class Comment(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def clean(self):
-        if self.comment_type == 1 and len(self.comment) ==0:
+        if self.comment_type == 1 and len(self.comment) ==0:    ##判断字符串是否为空
             raise ValidationError(u'评论内容不能为空，sb')
 
     def __str__(self):
-        return "%s,P:%s,%s" %(self.article,self.parent_comment_id,self.comment)
+        return "%s,P:%s,%s" %(self.article,self.parent_comment,self.comment)
 
 class Category(models.Model):
     name = models.CharField(max_length=64,unique=True)
